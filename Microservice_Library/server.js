@@ -64,6 +64,31 @@ app.get('/get_books', (req, res, next) => {
     
   });
 
+  app.get('/get_student_borrowed_books', (req, res, next) => {
+    const student_id = req.query.logged_in;
+    const query = "SELECT * FROM student_book_borrow;"
+    client.execute(query, function(err, result){
+        if(err){
+            console.log("error e dhuksi")
+        }
+        else{
+          const arr=[];
+          console.log("get student borrowed books e dhuklum")
+          for(let i=0; i<result.rows.length; i++){
+            if(result.rows[i].student_id == student_id){
+              arr.push(result.rows[i]);
+              
+            }
+          }
+          console.log(arr)
+            res.send({
+                'results': arr,
+            })
+        }
+    });
+    
+  });
+
   app.post('/update_books', (req, res, next) => {
     const id = req.body.id;
     const quantity = req.body.quantity;
