@@ -51,7 +51,7 @@ app.get('/api', function(req, res, next) {
         res.status(404).send({msg:err});
       }
       else{
-        console.log("landing page result:", result);
+        //console.log("landing page result:", result);
         res.json({
           'results': result.rows,
         })
@@ -67,7 +67,7 @@ app.post('/reg', (req, res, next) => {
 
   const query = "INSERT INTO Student_by_student_id(student_id, username, password) VALUES (?, ?, ?)";
   client.execute(query, [student_id, username, password], function(err, result){
-          console.log(err);
+          //console.log(err);
         })
 })
 
@@ -133,7 +133,7 @@ app.post('/edit_profile', (req, res, next) => {
   var phone = req.body.phone;
   var religion = req.body.religion;
   var id = req.body.id;
-  console.log("id = ", id, name, birthCertificatNo, phone);
+  //console.log("id = ", id, name, birthCertificatNo, phone);
   const query = "UPDATE Personal_info SET name = ?, birth_certificate_no = ?, dob = ?, gender = ?, gmail = ?, nid = ?, phone = ?, religion = ? WHERE id = ?";
   client.execute(query, [name, birthCertificatNo, dob, gender, email, nid, phone, religion, id], function(err, result){
     if(err){
@@ -160,21 +160,21 @@ app.get('/profile', function(req, res, next) {
       dict = err
     }
     else{
-      console.log("profile result:", result.rows);
+      //console.log("profile result:", result.rows);
       dict = result.rows;
 
 
-      console.log("hello there")
-      console.log("personal info id = ", dict[0].personal_info_id);
+      //console.log("hello there")
+      //console.log("personal info id = ", dict[0].personal_info_id);
       const query2 = 'SELECT * FROM Personal_info WHERE id = ?';
       
       client.execute(query2, [dict[0].personal_info_id], function(err, result){
         if(err){
-          console.log("inside err 2");
+          //console.log("inside err 2");
           res.status(404).send({msg:err});
         }
         else{
-          console.log("result:", result);
+          //console.log("result:", result);
           res.send({
             'results': result.rows,
             'student_id': logged_in,
