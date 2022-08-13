@@ -72,9 +72,14 @@ app.post('/reg', (req, res, next) => {
 })
 
 app.post('/login', (req, res, next) => {
+  const who = req.body.who;
   const username = req.body.username;
   const password = req.body.password;
 
+  console.log("username ---------- ", username);
+  console.log("password ---------- ", password);
+
+  
   const query = "SELECT * from Student_by_student_id WHERE student_id = ?";
   client.execute(query, [username], function(err, result){
     if(err){
