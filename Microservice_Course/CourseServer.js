@@ -55,7 +55,7 @@ app.post('/addcourse', (req, res, next) => {
         console.log(typeof uid2);
 
         const query1 = 'INSERT INTO Course(id, course_label, course_title, level, term, credit, type, dept_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
-        const query2 = 'INSERT INTO Course_by_level(id, course_label, course_title, level, term, credit, type, dept_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+        const query2 = 'INSERT INTO Course_by_level_term(id, course_label, course_title, level, term, credit, type, dept_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
         const query3 = 'INSERT INTO Course_by_dept_id(id, course_label, course_title, level, term, credit, type, dept_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
         const queries = [
               { query: query1, params: [uid1, courseID, courseName, level, term, creditHour, type, uid2] },
@@ -421,6 +421,44 @@ app.post('/teacher/getevaluationitem', async(req, res, next)=>{
 
   res.send({
     data: result.rows,
+  })
+})
+
+
+app.get('/teacher/publishOutline', async(req, res, next)=>{
+  var offered_course_id = req.query.offered_course_id;
+  result = await client.execute('select name from Evaluation_item_by_offered_course_id where offered_course_id = ?', [offered_course_id])
+  result = result.rows
+
+  offerCourseInfo = await client.execute('select course_id, session_id from offered_course where id = ?', [offered_course_id]);
+  course_id = offerCourseInfo.rows[0].course_id;
+  session_id = offerCourseInfo.rows[0].session_id;
+
+  courseInfo = await client.execute('select course_label from course where id = ?', [course_id]);
+  courseLabel = courseInfo.rows[0].course_label;
+
+
+  sessionInfo = await client.execute('select label from session where id = ?', [session_id]);
+  sessionLabel = sessionInfo.rows[0].label;
+
+
+  console.log("title : ", courseLabel, " session: ", sessionLabel);
+
+  var query = 'Create table ' + courseLabel + '_' + sessionLabel + '( id text PRIMARY KEY'
+  for(let i = 0; i < result.length; i++){
+    if(result[i].name === 'CT'){
+      query = query + ', CT1 double, CT2 double, CT3 double, CT4 double';
+      continue; 
+    }
+    query = query + ', '  + result[i].name + ' double'
+  }
+
+  query = query + ');'
+
+  console.log("hoise ki? ", query)
+  creationTable = await client.execute(query, []);
+  res.send({
+    data: "success",
   })
 })
 
