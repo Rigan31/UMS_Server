@@ -185,13 +185,58 @@ app.post('/login', async (req, res, next) => {
     }
   }
   else if(who == "librarian"){
-
+    result = await client.execute('SELECT * FROM librarian_by_username WHERE username = ?', [username]);
+    console.log("result: ", result);
+    if(result.rows.length == 0){
+      res.send({msg: "invalid_username"});
+    }
+    else{
+      if(result.rows[0].password === password){
+        res.send({
+          msg: "approved",
+          id: username,
+        });
+      }
+      else{
+        res.send({msg: "invalid_password"});
+      }
+    }
   }
   else if(who == "financial"){
-
+    result = await client.execute('SELECT * FROM financial_admin_by_username WHERE username = ?', [username]);
+    console.log("result: ", result);
+    if(result.rows.length == 0){
+      res.send({msg: "invalid_username"});
+    }
+    else{
+      if(result.rows[0].password === password){
+        res.send({
+          msg: "approved",
+          id: username,
+        });
+      }
+      else{
+        res.send({msg: "invalid_password"});
+      }
+    }
   }
   else if(who == "medical"){
-
+    result = await client.execute('SELECT * FROM medical_staff_by_username WHERE username = ?', [username]);
+    console.log("result: ", result);
+    if(result.rows.length == 0){
+      res.send({msg: "invalid_username"});
+    }
+    else{
+      if(result.rows[0].password === password){
+        res.send({
+          msg: "approved",
+          id: username,
+        });
+      }
+      else{
+        res.send({msg: "invalid_password"});
+      }
+    }
   }
   //result = await client.execute('SELECT * FROM Student_by_student_id WHERE username = ?', [username]);
   
