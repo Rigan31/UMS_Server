@@ -34,7 +34,6 @@ app.use(session({
 
 
 var cassandra = require('cassandra-driver');
-var logged_in = ""
 
 var client = new cassandra.Client({
   contactPoints: ['127.0.0.1'],
@@ -71,45 +70,161 @@ app.post('/reg', (req, res, next) => {
         })
 })
 
-app.post('/login', (req, res, next) => {
+app.post('/login', async (req, res, next) => {
   const who = req.body.who;
   const username = req.body.username;
   const password = req.body.password;
-
+  
   console.log("username ---------- ", username);
   console.log("password ---------- ", password);
+  console.log("who ---------- ", who);
+  if(who === "student"){
 
-  
-  const query = "SELECT * from Student_by_student_id WHERE student_id = ?";
-  client.execute(query, [username], function(err, result){
-    if(err){
-      res.status(404).send({msg:err});
+    result = await client.execute('SELECT * FROM Student_by_student_id WHERE student_id = ?', [username]);
+    console.log("result: ", result);
+    if(result.rows.length == 0){
+      res.send({msg: "invalid_username"});
     }
     else{
-      console.log("inside the post login method:", result.rows);
-      //console.log("database er password :", result.rows[0].password);
-      if(result.rows.length > 0){
       if(result.rows[0].password === password){
-        logged_in = result.rows[0].username
-        
-        req.session.user = result;
-        console.log("after session: ", req.session.user)
         res.send({
-          'result': "approved",
-          'id': result.rows[0].username,
-        })
-      } else{
-        res.send({
-          'result': "declined",
-        })
+          msg: "approved",
+          id: username,
+        });
       }
-      } else{
-        res.send({
-          'result': "declined",
-        })
+      else{
+        res.send({msg: "invalid_password"});
       }
     }
-  })
+  }
+  else if(who == "admin"){
+    result = await client.execute('SELECT * FROM master_admin_by_username WHERE username = ?', [username]);
+    console.log("result: ", result);
+    if(result.rows.length == 0){
+      res.send({msg: "invalid_username"});
+    }
+    else{
+      if(result.rows[0].password === password){
+        res.send({
+          msg: "approved",
+          id: username,
+        });
+      }
+      else{
+        res.send({msg: "invalid_password"});
+      }
+    }
+  }
+  else if(who == "teacher"){
+    result = await client.execute('SELECT password, teacher_id FROM teacher_by_username WHERE  username = ?', [username]);
+    console.log("result: ", result);
+    if(result.rows.length == 0){
+      res.send({msg: "invalid_username"});
+    }
+    else{
+      if(result.rows[0].password === password){
+        res.send({
+          msg: "approved",
+          id: result.rows[0].teacher_id,
+        });
+      }
+      else{
+        res.send({msg: "invalid_password"});
+      }
+    }
+  }
+  else if(who === "head"){
+    result = await client.execute('SELECT password, teacher_id FROM teacher_by_username WHERE  username = ?', [username]);
+    console.log("result: ", result);
+    if(result.rows.length == 0){
+      res.send({msg: "invalid_username"});
+    }
+    else{
+      if(result.rows[0].password === password){
+        const teacher_id = result.rows[0].teacher_id;
+        result = await client.execute('SELECT * FROM head_by_teacher_id WHERE teacher_id = ?', [teacher_id]);
+        if(result.rows.length == 0){
+          res.send({msg: "invalid_head_id"});
+        }
+        else{
+          res.send({
+            msg: "approved",
+            id: teacher_id,
+          });
+        }
+      }
+      else{
+        res.send({msg: "invalid_password"});
+      }
+    }
+
+  }
+  else if(who == "advisor"){
+    result = await client.execute('SELECT password, teacher_id FROM teacher_by_username WHERE  username = ?', [username]);
+    console.log("result: ", result);
+    if(result.rows.length == 0){
+      res.send({msg: "invalid_username"});
+    }
+    else{
+      if(result.rows[0].password === password){
+        const teacher_id = result.rows[0].teacher_id;
+        result = await client.execute('SELECT * FROM advisor_by_teacher_id WHERE teacher_id = ?', [teacher_id]);
+        if(result.rows.length == 0){
+          res.send({msg: "invalid_advisor_id"});
+        }
+        else{
+          res.send({
+            msg: "approved",
+            id: teacher_id,
+          });
+        }
+      }
+      else{
+        res.send({msg: "invalid_password"});
+      }
+    }
+  }
+  else if(who == "librarian"){
+
+  }
+  else if(who == "financial"){
+
+  }
+  else if(who == "medical"){
+
+  }
+  //result = await client.execute('SELECT * FROM Student_by_student_id WHERE username = ?', [username]);
+  
+  // const query = "SELECT * from Student_by_student_id WHERE student_id = ?";
+  // client.execute(query, [username], function(err, result){
+  //   if(err){
+  //     res.status(404).send({msg:err});
+  //   }
+  //   else{
+  //     console.log("inside the post login method:", result.rows);
+  //     //console.log("database er password :", result.rows[0].password);
+  //     if(result.rows.length > 0){
+  //     if(result.rows[0].password === password){
+  //       logged_in = result.rows[0].username
+        
+  //       req.session.user = result;
+  //       console.log("after session: ", req.session.user)
+  //       res.send({
+  //         'result': "approved",
+  //         'id': result.rows[0].username,
+  //       })
+  //     } else{
+  //       res.send({
+  //         'result': "declined",
+  //       })
+  //     }
+  //     } else{
+  //       res.send({
+  //         'result': "declined",
+  //       })
+  //     }
+  //   }
+  // })
 })
 
 
