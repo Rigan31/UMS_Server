@@ -84,40 +84,17 @@ app.post('/addcourse', (req, res, next) => {
 })
 
 
-app.get('/courselist', (req, res, next)=>{
-  var deptName = req.query.deptname;
-  console.log(deptName);
+app.get('/courselist', async(req, res, next)=>{
+  var headName = req.query.headName;
 
-  const query = 'SELECT id FROM Department_by_name WHERE name = ?';
+  deptResult = await client.execute('Select dept_id from head_by_teacher_id where teacher_id  = ?', [headName])
+  var dept_id = deptResult.rows[0].dept_id;
 
-  client.execute(query, [deptName], function(err, result){
-    if(err){
-      console.log(err);
-      res.status(404).send({msg:err});
-    }
-    else{
-      console.log(result.rows);
-      var dept_id = result.rows[0].id;
-      const query1 = 'SELECT * from course_by_dept_id where dept_id = ?';
-      client.execute(query1, [dept_id], function(err, result){
-        if(err){
-          console.log(err);
-          res.send({
-            data: "invalid",
-          })
-        }
-        else{
-          console.log("resultttttttttttttt: ", result.rows);
-          res.send({
-            data: result.rows,
-          })
-        }
-      })
-      
-    }
+  result = await client.execute('SELECT * from course_by_dept_id where dept_id = ?', [dept_id]);
+
+  res.send({
+    data: result.rows,
   })
-
-
 })
 
 
