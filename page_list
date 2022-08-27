@@ -1,0 +1,39 @@
+Backend:
+
+    Hall: http://localhost:5021/
+    Payment: http://localhost:5022/
+    Scholarship: http://localhost:5023/
+
+
+Frontend:
+
+    Payment:
+        http://localhost:3000/smart_card_list
+        http://localhost:3000/singlecard?student_id=1705041&card_no=dhummm
+        http://localhost:3000/addCard
+
+        http://localhost:3000/payment_list?type=all&student_id=2
+        http://localhost:3000/payment_list?type=single&student_id=1705041
+        http://localhost:3000/addPayment
+        http://localhost:3000/singlepayment?student_id=170503&id=20249cc1-36df-48e6-ae7e-12d6e95a3ab1
+
+        http://localhost:3000/transaction_list?type=single&student_id=1705040
+        http://localhost:3000/transaction_list?type=all&student_id=1705040
+        http://localhost:3000/singletransaction?student_id=1705041&id=202dc8b7-8f60-4d07-a766-dc85a9b41260
+        http://localhost:3000/addtransaction
+
+    Scholarship:
+        http://localhost:3000/scholarship_list
+        http://localhost:3000/single_scholarship?name=tahera
+        http://localhost:3000/add_scholarship
+
+        http://localhost:3000/applied_scholarship_list
+        http://localhost:3000/applied_scholarship_list?name=tahera2&session=0&student_id=1705
+        http://localhost:3000/apply_scholarship?name=tahera2
+        http://localhost:3000/single_apply_scholarship?name=tahera2&student_id=17050&session=0
+
+        http://localhost:3000/pending_scholarship_list?session=4&name=tahera2
+
+        http://localhost:3000/scholarship_state_list?type=single&applied_id=28f8b9c1-431a-49fb-8722-540583d60ba0&session=0&student_id=1705041&name=tahera2
+        http://localhost:3000/update_scholarship_state?student_id=1705041&session_id=0&applied_id=28f8b9c1-431a-49fb-8722-540583d60ba0&name=tahera2
+

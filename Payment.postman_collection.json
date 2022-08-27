@@ -266,12 +266,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5002/payment/create_payment",
+					"raw": "http://localhost:5022/payment/create_payment",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5002",
+					"port": "5022",
 					"path": [
 						"payment",
 						"create_payment"
@@ -374,7 +374,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"student_id\": 1705040\r\n}",
+					"raw": "{\r\n    \"student_id\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -382,12 +382,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5002/payment/delete_smart_card",
+					"raw": "http://localhost:5022/payment/delete_smart_card",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "5002",
+					"port": "5022",
 					"path": [
 						"payment",
 						"delete_smart_card"

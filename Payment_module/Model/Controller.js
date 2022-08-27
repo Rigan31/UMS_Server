@@ -131,10 +131,12 @@ const createTransaction = async function (data){
 
         if(type == "cash_in" || type == "cash_out") type_id = null;
 
-        var data = await Credentials.db_client.execute(SqlHelper.getCardBalance, [std], { prepare: true, hints : ['int'] });
+        var data = await Credentials.db_client.execute(SqlHelper.getSmartCardOne, [std, card_no], { prepare: true, hints : ['int', 'uuid'] });
+        if(data.rows.length == 0) return {status: "error", message: "Smart card does not exist"};
+        
         var balance = data.rows[0].balance;
 
-        if(amount > balance) {
+        if(mult != 1 && amount > balance) {
             console.log("Error in createTransaction function in controller");
             return {status: "error", message: "Insufficient balance"};
         } 

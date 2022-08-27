@@ -1,0 +1,766 @@
+{
+	"info": {
+		"_postman_id": "c2cfa296-f824-4f21-9fb8-0f13525582b1",
+		"name": "Scholarship",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22163421"
+	},
+	"item": [
+		{
+			"name": "homepage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create a scholarship",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"tahera3\",\r\n    \"amount\": 10.0,\r\n    \"level_term\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5023/scholarship/create_scholarship",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"create_scholarship"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "apply for a scholarship",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"scholarship_name\": \"tahera2\",\r\n    \"student_id\": 1705040,\r\n    \"session_id\": 4,\r\n    \"level_term\": \"4-1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5023/scholarship/apply_scholarship",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"apply_scholarship"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update scholarship state",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"student_id\": 1705,\r\n    \"session_id\": 0,\r\n    \"applied_id\": \"ccad281e-766a-461b-bb4e-09348757231a\",\r\n    \"state\": \"Head\",\r\n    \"updated_by\": \"huhu\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5023/scholarship/update_apply_state",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"update_apply_state"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a scholarship",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"tahera\",\r\n    \"amount\": 100.0,\r\n    \"level_term\": {\r\n        \"type\": \"remove\",\r\n        \"data\": [\"3-1\", \"4-1\", \"4-2\"]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5023/scholarship/update_scholarship",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"update_scholarship"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update applied scholarship",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"session\": 3,\r\n    \"student_id\": 1705041,\r\n    \"id\": \"b46e6c28-6764-41d1-8fcd-dcbc29d67608\",\r\n    \"amount\": 100.0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5023/scholarship/update_applied_scholarship",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"update_applied_scholarship"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all scholarship",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/scholarship_list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"scholarship_list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "scholarship list by level_term",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/scholarship_list?level_term=4-1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"scholarship_list"
+					],
+					"query": [
+						{
+							"key": "level_term",
+							"value": "4-1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all applied scholarship",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship_list?",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all applied scholarship by session",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship_list?session=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "session",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all applied scholarship by student",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship_list?student_id=1705041",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "student_id",
+							"value": "1705041"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all applied scholarship by name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship_list?name=tahera2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "tahera2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all applied scholarship by session_name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship_list?session=3&name=tahera2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "session",
+							"value": "3"
+						},
+						{
+							"key": "name",
+							"value": "tahera2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all applied scholarship by session_student",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship_list?session=3&student_id=1705041",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "session",
+							"value": "3"
+						},
+						{
+							"key": "student_id",
+							"value": "1705041"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all applied scholarship by student_name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship_list?student_id=1705041&name=tahera2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "student_id",
+							"value": "1705041"
+						},
+						{
+							"key": "name",
+							"value": "tahera2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all applied scholarship by session_student_name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship_list?session=3&student_id=1705041&name=tahera",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "session",
+							"value": "3"
+						},
+						{
+							"key": "student_id",
+							"value": "1705041"
+						},
+						{
+							"key": "name",
+							"value": "tahera"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all pending scholarship",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/pending_scholarship_list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"pending_scholarship_list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all pending scholarship session_state",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/pending_scholarship_list?session=3&state=Applied",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"pending_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "session",
+							"value": "3"
+						},
+						{
+							"key": "state",
+							"value": "Applied"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all pending scholarship student_state",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/pending_scholarship_list?student_id=1705040&state=Applied",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"pending_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "student_id",
+							"value": "1705040"
+						},
+						{
+							"key": "state",
+							"value": "Applied"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all pending scholarship session_student_state",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/pending_scholarship_list?session=3&student_id=1705041&state=Applied",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"pending_scholarship_list"
+					],
+					"query": [
+						{
+							"key": "session",
+							"value": "3"
+						},
+						{
+							"key": "student_id",
+							"value": "1705041"
+						},
+						{
+							"key": "state",
+							"value": "Applied"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "a scholarship",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/scholarship?name=tahera2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"scholarship"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "tahera2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "an applied scholarship",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/applied_scholarship?session=0&student_id=1705041&name=tahera2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"applied_scholarship"
+					],
+					"query": [
+						{
+							"key": "session",
+							"value": "0"
+						},
+						{
+							"key": "student_id",
+							"value": "1705041"
+						},
+						{
+							"key": "name",
+							"value": "tahera2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "a scholarship state",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/scholarship_state?applied_id=28f8b9c1-431a-49fb-8722-540583d60ba0&id=39857790-9a42-4012-bfd2-050c73c5d9cd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"scholarship_state"
+					],
+					"query": [
+						{
+							"key": "applied_id",
+							"value": "28f8b9c1-431a-49fb-8722-540583d60ba0"
+						},
+						{
+							"key": "id",
+							"value": "39857790-9a42-4012-bfd2-050c73c5d9cd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all scholarship state",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/scholarship_state_list?type=all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"scholarship_state_list"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all scholarship state of single",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5023/scholarship/scholarship_state_list?type=single&applied_id=28f8b9c1-431a-49fb-8722-540583d60ba0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"scholarship_state_list"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "single"
+						},
+						{
+							"key": "applied_id",
+							"value": "28f8b9c1-431a-49fb-8722-540583d60ba0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete applied scholarship",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"student_id\": 1705041,\r\n    \"session_id\": 3,\r\n    \"applied_id\": \"32ddc24a-5089-4743-a900-0a35ca956e96\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5023/scholarship/delete_applied_scholarship",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"delete_applied_scholarship"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete scholarship",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"tahera2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5023/scholarship/delete_scholarship",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5023",
+					"path": [
+						"scholarship",
+						"delete_scholarship"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

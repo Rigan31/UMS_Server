@@ -121,3 +121,25 @@ CREATE TYPE payment_transaction(
 
 
 
+
+
+
+
+
+
+
+
+
+
+ INSERT INTO scholarship(id, name, amount, creation_date, level_term)
+          ...  VALUES(uuid(), 'tahera', 100.0, totimestamp(NOW()), {'1','2','3'});
+
+INSERT INTO applied_scholarship(id, session_id, student_id, scholarship_type, scholarship_name, amount, issue_time) VALUES(
+          ... uuid(), 1, 1,  7249ab15-981e-4bd0-88b0-7e1cfd3fdff9, 'tahera');
+
+INSERT INTO scholarship_state(session_id, location, id, applied_scholarship_id, date, updated_by) VALUES(
+          ... 1, 'hall', uuid(), d45d61ce-8403-447b-89a3-adfd1a0ced28, totimestamp(now()), 'hehe');
+
+UPDATE applied_scholarship SET current_state={state_id:8dd45822-3f78-4847-9df9-ec412abf16f6, location:'hall', 
+                                                updated_by:'hehe', update_time:totimestamp(now())} 
+                                                WHERE session_id=1 AND student_id=1 AND id=d45d61ce-8403-447b-89a3-adfd1a0ced28;
