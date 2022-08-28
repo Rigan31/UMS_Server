@@ -25,7 +25,7 @@ var client = new cassandra.Client({
   keyspace: 'ums'
 });
 
-app.post('/addcourse', (req, res, next) => {
+app.post('/head/addcourse', (req, res, next) => {
   console.log("helooooooooooooooo")
   var deptName = req.body.deptName;
   var courseName = req.body.courseName;
@@ -99,14 +99,15 @@ app.get('/courselist', async(req, res, next)=>{
 
 
 app.get('/head/getTeacherList', async (req, res, next)=>{
-  const dept_name = req.query.dept_name;
+  //const dept_name = req.query.dept_name;
+  const headId = req.query.headId;
 
-  console.log("printing ....   ", dept_name)
+  console.log("printing ....   ", headId)
 
-  result = await client.execute('SELECT id FROM Department_by_name WHERE name = ?', [dept_name])
+  result = await client.execute('Select dept_id from head_by_teacher_id where teacher_id  = ?', [headId])
 
   console.log(result.rows)
-  const dept_id = result.rows[0].id
+  const dept_id = result.rows[0].dept_id
   teacherList = await client.execute('Select  username , personal_info_id from teacher_by_dept_id where dept_id = ?', [dept_id])
   console.log("tacher list: ", teacherList);
 
@@ -133,21 +134,23 @@ app.post('/head/singleoffercourse/saveteacher', async (req, res, next)=>{
 
 })
 
-app.get('/head/getCourse', (req, res, next)=>{
+app.get('/head/getCourse', async (req, res, next)=>{
     var level = parseInt(req.query.level)
     var term = parseInt(req.query.term);
-    const dept_name = req.query.dept_name;
+    const headId = req.query.headId;
 
-    console.log("printing ....   ", level, term, dept_name)
+    // console.log("printing ....   ", level, term, dept_name)
+    // deptResult = await client.execute(, [headId])
 
-    const query = "Select id from department_by_name where name = ?";
-    client.execute(query, [dept_name], function(err, result){
+
+    const query = 'Select dept_id from head_by_teacher_id where teacher_id  = ?';
+    client.execute(query, [headId], function(err, result){
       if(err){
         console.log(err)
         res.status(404);
       }
-      else{
-        var dept_id = result.rows[0].id;
+      else{ 
+        var dept_id = result.rows[0].dept_id;
         console.log(dept_id)
         const query2 = 'Select * from course_by_level_term where level = ? and term = ? and dept_id = ?';
         client.execute(query2, [level, term, dept_id], { hints : ['int', 'int'] }, function(err, result){
@@ -256,6 +259,8 @@ app.get('/head/singleoffercourse', async function(req, res, next){
   
   console.log("course id : ", course_id)
   courseData = await client.execute('SELECT * from course WHERE id = ?', [course_id]);
+
+  deptResult = await client.execute('Select name from department where id = ?', [courseData.rows[0].dept_id]);
       
   res.send({
     data: courseData.rows,
@@ -329,11 +334,12 @@ app.get('/singlecourse', (req, res, next)=>{
 app.get('/teacher/getassigncourse', async(req, res, next)=>{
   var teacher_name = req.query.username;
   var tmpList = []
-  console.log(teacher_name);
+  console.log("------", teacher_name);
 
+  teacherResult = await client.execute('select username from teacher_by_username where teacher_id = ? allow filtering', [teacher_name]);
+  var teacher_username = teacherResult.rows[0].username;
   
-  
-  result = await client.execute('select offerCourseId from teacher_offercourse where teacher_username = ?', [teacher_name]);
+  result = await client.execute('select offerCourseId from teacher_offercourse where teacher_username = ?', [teacher_username]);
   tmpList = result.rows
 
   console.log(tmpList);
@@ -438,6 +444,201 @@ app.get('/teacher/publishOutline', async(req, res, next)=>{
     data: "success",
   })
 })
+
+app.get('/student/offeredCourses', async(req, res, next)=>{
+  var level = parseInt(req.query.level);
+  var term = parseInt(req.query.term);
+  
+
+  result = await client.execute('select * from session', []);
+  sessionId = result.rows[0].id;
+
+  console.log("session id : ", sessionId)
+  console.log("level : ", level)
+  console.log("term : ", term)
+  console.log("type: ", typeof level)
+
+  result = await client.execute('select * from offered_course_by_level_term_session_id where level = ? and term = ? and session_id = ?;', [level, term, sessionId],{ prepare : true });
+  
+  
+ // courseData = await client.execute('select * from course where id = ?', [result.rows[0].course_id]);
+  var tmpList = result.rows
+  for(let i = 0; i < result.rows.length; i++){
+    //console.log("id --- - ", tmpList[i].offercourseid);
+    courseInfo = await client.execute('select course_title, course_label, level, term, credit, type  from course where id = ?', [result.rows[i].course_id]);
+    tmpList[i]["course_title"] = courseInfo.rows[0].course_title;
+    tmpList[i]["course_label"] = courseInfo.rows[0].course_label;
+    tmpList[i]["level"] = courseInfo.rows[0].level;
+    tmpList[i]["term"] = courseInfo.rows[0].term;
+    tmpList[i]["credit"] = courseInfo.rows[0].credit;
+    tmpList[i]["type"] = courseInfo.rows[0].type;
+  }
+
+  
+  res.send({
+    data: tmpList,
+  })
+});
+
+
+app.post('/student/offer_course_register', async(req, res, next)=>{
+  var offered_course_id = req.body.offered_course_id;
+  var student_id = req.body.student_id;
+
+  // print both of them
+  console.log(offered_course_id, "  ", student_id);
+  
+
+  for(let i = 0; i < offered_course_id.length; i++){
+    var stateUid = uuid.v4();
+    var requestUid = uuid.v4();
+    result = await client.execute('insert into req_course_state(id, state) values(?, ?)', [stateUid, "pending"]);
+    result = await client.execute('insert into request_course(id, current_student_id, offered_course_id, student_id) values(?, ?, ?, ?)', [requestUid, stateUid, offered_course_id[i], student_id]);
+    result = await client.execute('insert into request_course_by_student_id(id, current_student_id, offered_course_id, student_id) values(?, ?, ?, ?)', [requestUid, stateUid, offered_course_id[i], student_id]);
+  }
+  
+  res.send({
+    data: "success",
+  })
+
+});
+
+
+
+
+// to show req course to student
+app.get('/student/requestedCourses', async(req, res, next)=>{
+  var student_id = req.query.student_id;
+
+  console.log("student id : ", student_id)
+  result = await client.execute('select * from request_course_by_student_id where student_id = ?', [student_id]);
+  console.log("kfjakjflkajdlfjaldfjlk    ", result.rows)
+  
+  tmpList = result.rows
+
+  for(let i = 0; i < result.rows.length; i++){
+    courseInfo = await client.execute('select * from offered_course where id = ?', [result.rows[i].offered_course_id]);
+    course_id = courseInfo.rows[0].course_id;
+    courseInfo = await client.execute('select course_title, course_label, level, term, credit, type  from course where id = ?', [course_id]);
+    tmpList[i]["course_title"] = courseInfo.rows[0].course_title;
+    tmpList[i]["course_label"] = courseInfo.rows[0].course_label;
+    tmpList[i]["level"] = courseInfo.rows[0].level;
+    tmpList[i]["term"] = courseInfo.rows[0].term;
+    tmpList[i]["credit"] = courseInfo.rows[0].credit;
+    tmpList[i]["type"] = courseInfo.rows[0].type;
+
+    stateInfo = await client.execute('select state from req_course_state where id = ?', [result.rows[i].current_student_id]);
+    tmpList[i]["state"] = stateInfo.rows[0].state;
+  }
+
+  console.log("printeed tmpList", tmpList)
+  res.send({
+    data: tmpList,
+  })
+
+})
+
+/// show the student list to advisor
+
+app.get('/advisor/requestedCourses', async(req, res, next)=>{
+  var advisor_id = req.query.advisor_id;
+  result = await client.execute('Select * from  student_advisor_by_advisor_id  where advisor_id = ?', [advisor_id]);
+
+  console.log("student id : ", result.rows)
+  tmpList = result.rows
+  tmpAcceptedList = []
+  tmpPendingList = []
+
+  for(let i = 0; i < result.rows.length; i++){
+    requestCourse = await client.execute('select * from request_course_by_student_id where student_id = ?', [result.rows[i].student_id]);
+
+    if(requestCourse.rows.length == 0){
+      continue;
+    }
+    console.log("request course : ", requestCourse.rows[0])
+    console.log("request course 0 current_student_id : ", requestCourse.rows[0].current_student_id)
+    reqState = await client.execute('select state from req_course_state where id = ?', [requestCourse.rows[0].current_student_id]);
+
+    reqState = reqState.rows[0].state;
+    if(reqState === "pending"){
+      tmpPendingList.push(result.rows[i]);
+    }
+    else{
+      tmpAcceptedList.push(result.rows[i]);
+    }
+  }
+
+  res.send({
+    data: {
+      accepted: tmpAcceptedList,
+      pending: tmpPendingList,
+    },
+  })
+});
+
+/// for advisor to accept the request
+app.get('/advisor/acceptCourses', async(req, res, next)=>{
+  var student_id = req.query.student_id;
+
+  console.log("student id : ", student_id)
+  result = await client.execute('select * from request_course_by_student_id where student_id = ?', [student_id]);
+  console.log("kfjakjflkajdlfjaldfjlk    ", result.rows)
+  
+  tmpList = result.rows
+
+  for(let i = 0; i < result.rows.length; i++){
+    courseInfo = await client.execute('select * from offered_course where id = ?', [result.rows[i].offered_course_id]);
+    course_id = courseInfo.rows[0].course_id;
+    courseInfo = await client.execute('select course_title, course_label, level, term, credit, type  from course where id = ?', [course_id]);
+    tmpList[i]["course_title"] = courseInfo.rows[0].course_title;
+    tmpList[i]["course_label"] = courseInfo.rows[0].course_label;
+    tmpList[i]["level"] = courseInfo.rows[0].level;
+    tmpList[i]["term"] = courseInfo.rows[0].term;
+    tmpList[i]["credit"] = courseInfo.rows[0].credit;
+    tmpList[i]["type"] = courseInfo.rows[0].type;
+
+    stateInfo = await client.execute('select state from req_course_state where id = ?', [result.rows[i].current_student_id]);
+    tmpList[i]["state"] = stateInfo.rows[0].state;
+  }
+
+  console.log("printeed tmpList", tmpList)
+  res.send({
+    data: tmpList,
+  })
+
+})
+
+
+/// advisor accepted
+
+app.post('/advisor/accepted', async(req, res, next)=>{
+  var offered_course_id = req.body.offered_course_id;
+  var student_id = req.body.student_id;
+
+  // print both of them
+  console.log("advisor accepted");
+  console.log(offered_course_id, "  ", student_id);
+  
+
+  for(let i = 0; i < offered_course_id.length; i++){
+    var stateUid = uuid.v4();
+    // var requestUid = uuid.v4();
+    requestCourseInfo = await client.execute('select id from request_course_by_student_id where student_id = ?;', [student_id]);
+    requestCourseId = requestCourseInfo.rows[i].id;
+
+    result = await client.execute('insert into req_course_state(id, state) values(?, ?)', [stateUid, "advisor_accepted"]);
+    result = await client.execute('update request_course set current_student_id = ? where id = ?;', [stateUid, requestCourseId]);
+    result = await client.execute('update request_course_by_student_id set current_student_id = ? where id = ? and student_id = ?;', [stateUid, requestCourseId, student_id]);
+    // result = await client.execute('insert into request_course(id, current_student_id, offered_course_id, student_id) values(?, ?, ?, ?)', [requestUid, stateUid, offered_course_id[i], student_id]);
+    // result = await client.execute('insert into request_course_by_student_id(id, current_student_id, offered_course_id, student_id) values(?, ?, ?, ?)', [requestUid, stateUid, offered_course_id[i], student_id]);
+  }
+  
+  res.send({
+    data: "success",
+  })
+
+});
+ 
 
 app.listen(5002, () => {
     console.log("Course server is connected on port 5002")

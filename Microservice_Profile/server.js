@@ -118,6 +118,53 @@ app.post('/admin/addStudent', async (req, res, next) => {
   });
 })
 
+
+app.get('/advisor/seeStudentProfile', async(req, res, next)=>{
+  var advisor_id = req.query.advisor_id;
+  result = await client.execute('Select * from  student_advisor_by_advisor_id  where advisor_id = ?', [advisor_id]);
+
+  res.send({
+    data: result.rows,
+  })
+});
+
+
+app.get('/student/profile', async(req, res, next)=>{
+  // var student_id = req.query.student_id;
+  
+  // result = await client.execute('select * from student_by_student_id where student_id = ?', [student_id]);
+  // personalInfoId = result.rows[0].personal_info_id;
+  // dept_id = result.rows[0].dept_id; 
+
+  // personalInfo = await client.execute('select * from personal_info where id = ?', [personalInfoId]);
+  // deptName = await client.execute('select name from department_by_id where id = ?', [dept_id]);
+
+  // presentAddress = await client.execute('select * from address where id = ?', [personalInfo.rows[0].present_address_id]);
+  // permanentAddress = await client.execute('select * from address where id = ?', [personalInfo.rows[0].permanent_address_id]);
+  
+  // res.send({
+  //   name: personalInfo.rows[0].name,
+  //   phoneNumber: personalInfo.rows[0].phone,
+  //   nid: personalInfo.rows[0].nid,
+  //   gender: personalInfo.rows[0].gender,
+  //   bcn: personalInfo.rows[0].birth_certificate_no,
+  //   countryPre: presentAddress.rows[0].country,
+  //   districtPre: presentAddress.rows[0].district,
+  //   thanaPre: presentAddress.rows[0].thana,
+  //   postOfficePre: presentAddress.rows[0].post_office,
+  //   addressPre: presentAddress.rows[0].name,
+  //   countryPar: permanentAddress.rows[0].country,
+  //   districtPar: permanentAddress.rows[0].district,
+  //   thanaPar: permanentAddress.rows[0].thana,
+  //   postOfficePar: permanentAddress.rows[0].post_office,
+  //   addressPar:   permanentAddress.rows[0].name,
+  //   gmail:  personalInfo.rows[0].gmail,
+  //   studentId:  result.rows[0].student_id,
+  //   username: result.rows[0].username,
+  //   deptName: deptName.rows[0].name,
+  // })
+})
+
 app.listen(5015, () => {
     console.log("server is connected on port 5015")
 })
