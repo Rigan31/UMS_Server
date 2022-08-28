@@ -51,6 +51,6 @@ app.get('/get_feedbacks', (req, res, next) => {
 
   
 
-app.listen(5011, () => {
-    console.log("server is connected on port 5011")
+app.listen(5010, () => {
+    console.log("server is connected on port 5010")
 })
