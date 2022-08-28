@@ -529,11 +529,12 @@ const getPendingScholarshipList = async function (inp){
         for(var i=0; i<ret.length; i++){
             var st = ret[i].current_state.location;
 
-            if(state == undefined && ( st == scholarship_state[state_type-1] || st == scholarship_state[state_type-2] )){
-                ret.splice(i, 1);
-                i--;
-            }
-            else if(state != undefined && state != st){
+            // if(state == undefined && ( st == scholarship_state[state_type-1] || st == scholarship_state[state_type-2] )){
+            //     ret.splice(i, 1);
+            //     i--;
+            // }
+            // else 
+            if(state != undefined && state != st){
                 ret.splice(i, 1);
                 i--;
             }
